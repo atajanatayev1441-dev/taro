@@ -16,7 +16,7 @@ if not token:
     exit(1)
 
 # ID администратора (замени на свой ID)
-admin_id = "YOUR_ADMIN_ID"
+admin_id = "8283258905"
 
 # Обработчик команды /start
 async def start(update: Update, context):
