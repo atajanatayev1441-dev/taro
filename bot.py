@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 token = os.getenv("BOT_TOKEN")
 if not token:
     logger.error("Токен не задан. Убедись, что переменная окружения BOT_TOKEN установлена.")
-    exit(1)
+    exit(1)  # Выход с кодом ошибки, если токен не найден
 
 # ID администратора (замени на свой ID)
 admin_id = "YOUR_ADMIN_ID"  # Замените на ваш ID
