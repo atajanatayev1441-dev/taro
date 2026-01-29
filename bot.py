@@ -3,9 +3,9 @@ from telegram.ext import Application, CommandHandler, CallbackQueryHandler, Mess
 from telegram.ext import filters
 
 # Токен бота (замени на свой)
-token = "YOUR_BOT_TOKEN"
+token = "8497922798:AAEG279iUN_Ww365xayiTnVYZYCUuOiaJMA"
 # ID администратора (замени на свой ID)
-admin_id = "YOUR_ADMIN_ID"
+admin_id = "8283258905"
 
 # Пример команды для старта
 async def start(update: Update, context):
