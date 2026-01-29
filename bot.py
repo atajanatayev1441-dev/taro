@@ -1,32 +1,44 @@
+import os
+import logging
 from telegram import Update
-from telegram.ext import Application, CommandHandler, CallbackQueryHandler, MessageHandler
+from telegram.ext import Application, CommandHandler, MessageHandler
 from telegram.ext import filters
 
-# Токен бота (замени на свой)
-token = "8497922798:AAEG279iUN_Ww365xayiTnVYZYCUuOiaJMA"
-# ID администратора (замени на свой ID)
-admin_id = "8283258905"
+# Включаем логирование
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                    level=logging.INFO)
+logger = logging.getLogger(__name__)
 
-# Пример команды для старта
+# Получаем токен из переменной окружения
+token = os.getenv("BOT_TOKEN")  # Токен будет подтягиваться из переменной окружения на Railway
+if not token:
+    logger.error("Токен не задан. Убедись, что переменная окружения BOT_TOKEN установлена.")
+    exit(1)
+
+# ID администратора (замени на свой ID)
+admin_id = "YOUR_ADMIN_ID"
+
+# Обработчик команды /start
 async def start(update: Update, context):
+    logger.info("Получена команда /start")
     await update.message.reply("Привет! Я твой Таро-бот!")
 
-# Пример обработки текста (не команды)
+# Обработчик текстовых сообщений
 async def handle_text(update: Update, context):
     text = update.message.text
+    logger.info(f"Получено текстовое сообщение: {text}")
     await update.message.reply(f"Ты написал: {text}")
 
 # Основная функция для запуска бота
 def main():
-    # Создание приложения (замена Updater на Application)
+    # Создание приложения
     application = Application.builder().token(token).build()
 
-    # Регистрация обработчиков команд
+    # Регистрируем обработчики
     application.add_handler(CommandHandler("start", start))
-
-    # Регистрация обработчика текстовых сообщений (не команд)
     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_text))
 
+    logger.info("Бот запущен!")
     # Запуск бота
     application.run_polling()
 
