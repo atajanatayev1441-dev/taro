@@ -1,63 +1,34 @@
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import Updater, CommandHandler, CallbackQueryHandler, MessageHandler, Filters
+from telegram import Update
+from telegram.ext import Application, CommandHandler, CallbackQueryHandler, MessageHandler
+from telegram.ext import filters
 
-# Токен бота и ID администратора
-API_TOKEN = '8497922798:AAEG279iUN_Ww365xayiTnVYZYCUuOiaJMA'  # Замените на ваш токен
-ADMIN_ID = '8283258905'    # Замените на ваш ID
+# Токен бота (замени на свой)
+token = "YOUR_BOT_TOKEN"
+# ID администратора (замени на свой ID)
+admin_id = "YOUR_ADMIN_ID"
 
-# Начальная команда
-def start(update: Update, context):
-    keyboard = [
-        [InlineKeyboardButton("Любовь", callback_data='love')],
-        [InlineKeyboardButton("Карьера", callback_data='career')],
-        [InlineKeyboardButton("Финансы", callback_data='finances')],
-        [InlineKeyboardButton("Здоровье", callback_data='health')],
-        [InlineKeyboardButton("Связаться с администратором", callback_data='contact_admin')]
-    ]
-    reply_markup = InlineKeyboardMarkup(keyboard)
-    update.message.reply_text("Привет! О чем вы хотите узнать?", reply_markup=reply_markup)
+# Пример команды для старта
+async def start(update: Update, context):
+    await update.message.reply("Привет! Я твой Таро-бот!")
 
-# Обработка нажатий на кнопки
-def button(update, context):
-    query = update.callback_query
-    query.answer()
+# Пример обработки текста (не команды)
+async def handle_text(update: Update, context):
+    text = update.message.text
+    await update.message.reply(f"Ты написал: {text}")
 
-    if query.data == 'love':
-        query.edit_message_text(text="Вы выбрали тему: Любовь. Какие вопросы у вас по любви?")
-    elif query.data == 'career':
-        query.edit_message_text(text="Вы выбрали тему: Карьера. Какие вопросы у вас по карьере?")
-    elif query.data == 'finances':
-        query.edit_message_text(text="Вы выбрали тему: Финансы. Какие вопросы вас интересуют?")
-    elif query.data == 'health':
-        query.edit_message_text(text="Вы выбрали тему: Здоровье. О чем вы хотите узнать?")
-    elif query.data == 'contact_admin':
-        send_to_admin("Пользователь хочет связаться с вами.")
-        query.edit_message_text(text="Сообщение отправлено администратору. Ожидайте ответа.")
-
-# Отправка сообщений админу
-def send_to_admin(message):
-    context.bot.send_message(chat_id=ADMIN_ID, text=message)
-
-# Обработка загрузки архива
-def handle_zip_file(update: Update, context):
-    file = update.message.document
-    file_name = file.file_name
-    file_path = f'./downloads/{file_name}'
-    file.download(file_path)
-    send_to_admin(f"Пользователь отправил архив: {file_name}")
-    update.message.reply_text(f"Файл {file_name} успешно загружен и отправлен админу.")
-
-# Главная функция
+# Основная функция для запуска бота
 def main():
-    updater = Updater(API_TOKEN, use_context=True)
-    dp = updater.dispatcher
+    # Создание приложения (замена Updater на Application)
+    application = Application.builder().token(token).build()
 
-    dp.add_handler(CommandHandler("start", start))
-    dp.add_handler(CallbackQueryHandler(button))
-    dp.add_handler(MessageHandler(Filters.document.mime_type("application/zip"), handle_zip_file))
+    # Регистрация обработчиков команд
+    application.add_handler(CommandHandler("start", start))
 
-    updater.start_polling()
-    updater.idle()
+    # Регистрация обработчика текстовых сообщений (не команд)
+    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_text))
 
-if __name__ == '__main__':
+    # Запуск бота
+    application.run_polling()
+
+if __name__ == "__main__":
     main()
