@@ -2,8 +2,8 @@ from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Updater, CommandHandler, CallbackQueryHandler, MessageHandler, Filters
 
 # Токен бота и ID администратора
-API_TOKEN = 'your_bot_token'  # Замените на ваш токен
-ADMIN_ID = 'your_admin_id'    # Замените на ваш ID
+API_TOKEN = '8497922798:AAEG279iUN_Ww365xayiTnVYZYCUuOiaJMA'  # Замените на ваш токен
+ADMIN_ID = '8283258905'    # Замените на ваш ID
 
 # Начальная команда
 def start(update: Update, context):
